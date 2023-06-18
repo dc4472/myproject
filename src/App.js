@@ -3,6 +3,7 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import BillForm from './BillForm'
 import Confirmation from './Confirmation'
+import Home from './Home'
 
 const App = props => (
   <div className="App">
@@ -12,8 +13,7 @@ const App = props => (
                     {/* a route for the home page */}
                     <Route path="/form" element={<BillForm />} />
                     <Route path="/confirmation" element={<Confirmation />} />
-
-
+                    <Route path="/" element={<Home />} />
                 </Routes>
             </main>
         </Router>

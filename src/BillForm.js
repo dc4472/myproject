@@ -11,39 +11,42 @@ const BillForm = props =>{
     const [hospital, setHospital] = useState('')
     const [amount, setAmount] = useState('')
     const [image, setImage] = useState(null);
-    // const [error, setError] = useState(undefined)
+    const [error, setError] = useState(undefined)
 
     const navigate = useNavigate()
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleSubmit = (event) => {
+      event.preventDefault();
       
-        const formData = new FormData();
-        formData.append('patientName', name);
-        formData.append('patientAddress', address);
-        formData.append('hospitalName', hospital);
-        formData.append('dateOfService', dos);
-        formData.append('billAmount', amount);
-        formData.append('billImage', image);
-        
-      
-        try {
-          const response = await axios.post('/api/submit-medical-bill', formData);
-          // Handle the response or perform any necessary actions
-          console.log(response.data);
-          // Reset the form fields
-          setName('');
-          setAddress('');
-          setHospital('');
-          setDos('');
-          setAmount('');
-          setImage(null);
-          
-        } catch (error) {
-          // Handle any errors that occur during the request
-          console.error(error);
-        }
-      }
+      // Generate a unique identifier for the bill (e.g., timestamp)
+      const billId = Date.now();
+    
+      // Create an object with the form data
+      const billData = {
+        id: billId,
+        name: name,
+        address: address,
+        dos: dos,
+        hospital: hospital,
+        amount: amount,
+        image: image,
+      };
+    
+      // Save the bill data to localStorage
+      localStorage.setItem(`bill-${billId}`, JSON.stringify(billData));
+    
+      // Reset the form inputs
+      setName('');
+      setAddress('');
+      setDos('');
+      setHospital('');
+      setAmount('');
+      setImage(null);
+    
+      // Redirect to the home page
+      navigate('/');
+    }
+    
 
     
     return (
