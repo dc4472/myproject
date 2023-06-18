@@ -1,3 +1,28 @@
+import React from 'react'
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import BillForm from './BillForm'
+import Confirmation from './Confirmation'
+import Home from './Home'
+
+const App = props => (
+  <div className="App">
+        <Router>
+            <main className="App-main">
+                <Routes>
+                    {/* a route for the home page */}
+                    <Route path="/form" element={<BillForm />} />
+                    <Route path="/confirmation" element={<Confirmation />} />
+                    <Route path="/" element={<Home />} />
+                </Routes>
+            </main>
+        </Router>
+    </div>
+
+
+
+)
+/*
 import logo from './logo.svg';
 import './App.css';
 
@@ -23,3 +48,5 @@ function App() {
 }
 
 export default App;
+*/
+export default App
