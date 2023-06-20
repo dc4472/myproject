@@ -32,7 +32,7 @@ const Home = props => {
         {bills.map((bill) => (
           <div key={bill.id}>
             {/* Display bill information */}
-            <p>Patient Name: {bill.name}</p>
+            <p className="patient-name" onClick={() => navigate(`/edit/${bill.id}`)}>Patient Name: {bill.name}</p>
             <p>Patient Address: {bill.address}</p>
             <p>Date of Service: {bill.dos}</p>
             <p>Hospital Name: {bill.hospital}</p>

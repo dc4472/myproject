@@ -32,6 +32,7 @@ const Confirmation = () =>{
       <p>Amount: {billData.amount}</p>
       {/* Additional fields can be displayed as needed */}
       <Link to="/">Go to Homepage</Link>
+      <Link to={`/edit/${billData.id}`}>Edit Everything</Link>
     </div>
   );
 
