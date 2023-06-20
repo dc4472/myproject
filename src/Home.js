@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import './Home.css'
 
 const Home = props => {
 
@@ -23,19 +24,22 @@ const Home = props => {
   const bills = getBillsFromLocalStorage();
 
   // <h2>Bill ID: {bill.id}</h2> This is just for later in case I still need it
+  // <p>Patient Name: {bill.name}</p>
   return (
     <div>
       <h1>Uploaded Bills</h1>
-      {bills.map((bill) => (
-        <div key={bill.id}>
-          {/* Display bill information */}
-          <p>Patient Name: {bill.name}</p>
-          <p>Patient Address: {bill.address}</p>
-          <p>Date of Service: {bill.dos}</p>
-          <p>Hospital Name: {bill.hospital}</p>
-          <p>Amount due: {bill.amount}</p>
-        </div>
-      ))}
+      <div className="bill-list">
+        {bills.map((bill) => (
+          <div key={bill.id}>
+            {/* Display bill information */}
+            <p>Patient Name: {bill.name}</p>
+            <p>Patient Address: {bill.address}</p>
+            <p>Date of Service: {bill.dos}</p>
+            <p>Hospital Name: {bill.hospital}</p>
+            <p>Amount due: {bill.amount}</p>
+          </div>
+        ))}
+      </div>
         <button onClick={() => navigate('/form')}>Add Bill</button>
     </div>
   );

@@ -1,0 +1,17 @@
+.bill-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjust column width as needed */
+    gap: 20px;
+  }
+  
+  .bill-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .patient-name {
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+  }

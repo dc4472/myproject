@@ -44,7 +44,7 @@ const BillForm = props =>{
       setImage(null);
     
       // Redirect to the home page
-      navigate('/');
+      navigate('/confirmation');
     }
     
 
