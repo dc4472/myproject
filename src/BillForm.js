@@ -1,6 +1,8 @@
 import React, {  useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
+import * as Yup from 'yup'
 // import axios from 'axios'
 
 const BillForm = props =>{
@@ -14,6 +16,25 @@ const BillForm = props =>{
     const [error, setError] = useState(undefined)
 
     const navigate = useNavigate()
+
+    const initialValues = {
+      name: '',
+      address: '',
+      dos: '',
+      hospital: '',
+      amount: '',
+      image: null
+    }
+
+    const validationSchema = Yup.object().shape({
+      name: Yup.string().required('Name is required'),
+      address: Yup.string().required('Address is required'),
+      dos: Yup.string().required('Date of Service is required'),
+      hospital: Yup.string().required('Hospital Name is required'),
+      amount: Yup.number()
+        .typeError('Amount must be a number')
+        .required('Amount is required'),
+    });
 
     const handleSubmit = (event) => {
       event.preventDefault();
@@ -44,8 +65,17 @@ const BillForm = props =>{
       setImage(null);
     
       // Redirect to the home page
-      navigate('/');
+      navigate(`/confirmation/${billData.id}`);
     }
+
+    /*
+    <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+         ></Formik>
+
+    */
     
 
     

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import BillForm from './BillForm'
 import Confirmation from './Confirmation'
 import Home from './Home'
+import EditBill from './EditBill'
 
 const App = props => (
   <div className="App">
@@ -12,8 +13,9 @@ const App = props => (
                 <Routes>
                     {/* a route for the home page */}
                     <Route path="/form" element={<BillForm />} />
-                    <Route path="/confirmation" element={<Confirmation />} />
+                    <Route path="/confirmation/:billId" element={<Confirmation />} />
                     <Route path="/" element={<Home />} />
+                    <Route path="/edit/:billId" element={<EditBill />} />
                 </Routes>
             </main>
         </Router>
