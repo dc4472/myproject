@@ -1,9 +1,8 @@
 import React, {  useState } from 'react'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-// import axios from 'axios'
+
 
 const BillForm = props =>{
 
@@ -14,6 +13,7 @@ const BillForm = props =>{
     const [amount, setAmount] = useState('')
     const [image, setImage] = useState(null);
     const [error, setError] = useState(undefined)
+  
 
     const navigate = useNavigate()
 
@@ -36,37 +36,34 @@ const BillForm = props =>{
         .required('Amount is required'),
     });
 
-    const handleSubmit = (event) => {
-      event.preventDefault();
-      
+
+
+    const handleSubmit = (values, { resetForm }) => {
       // Generate a unique identifier for the bill (e.g., timestamp)
       const billId = Date.now();
-    
+  
       // Create an object with the form data
       const billData = {
         id: billId,
-        name: name,
-        address: address,
-        dos: dos,
-        hospital: hospital,
-        amount: amount,
-        image: image,
+        name: values.name,
+        address: values.address,
+        dos: values.dos,
+        hospital: values.hospital,
+        amount: values.amount,
+        image: values.image,
       };
-    
+  
       // Save the bill data to localStorage
       localStorage.setItem(`bill-${billId}`, JSON.stringify(billData));
-    
+  
       // Reset the form inputs
-      setName('');
-      setAddress('');
-      setDos('');
-      setHospital('');
-      setAmount('');
-      setImage(null);
-    
-      // Redirect to the home page
+      resetForm();
+
       navigate(`/confirmation/${billData.id}`);
+  
     }
+
+
 
     /*
     <Formik
@@ -81,69 +78,57 @@ const BillForm = props =>{
     
     return (
 
-        <>
-        <form onSubmit={event => handleSubmit(event)}>
-        <label>
-          Patient Name:
-          <input
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Patient Address:
-          <input
-            type="text"
-            value={address}
-            onChange={(event) => setAddress(event.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Hospital Name:
-          <input
-            type="text"
-            value={hospital}
-            onChange={(event) => setHospital(event.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Date of Service:
-          <input
-            type="date"
-            value={dos}
-            onChange={(event) => setDos(event.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Bill Amount:
-          <input
-            type="float"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-          />
-        </label>
-        <br />
-        <label>
+      <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+         >
+
+      <Form>
+      <label>
+        Patient Name:
+        <Field type="text" name="name" />
+        <ErrorMessage name="name" component="div" className="error" />
+      </label>
+      <br />
+      <label>
+        Patient Address:
+        <Field type="text" name="address" />
+        <ErrorMessage name="address" component="div" className="error" />
+      </label>
+      <br />
+      <label>
+        Hospital Name:
+        <Field type="text" name="hospital" />
+        <ErrorMessage name="hospital" component="div" className="error" />
+      </label>
+      <br />
+      <label>
+        Date of Service:
+        <Field type="date" name="dos" />
+        <ErrorMessage name="dos" component="div" className="error" />
+      </label>
+      <br />
+      <label>
+        Bill Amount:
+        <Field type="number" name="amount" />
+        <ErrorMessage name="amount" component="div" className="error" />
+      </label>
+      <br />
+      <label>
         Bill Image:
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(event) => setImage(event.target.files[0])}
-        />
+        <Field type="file" name="image" />
+        <ErrorMessage name="image" component="div" className="error" />
       </label>
       <br />
 
-        <br />
-        <button type="submit">Submit</button>
-      </form>
+      <br />
+      <button type="submit">Submit</button>
+      <br />
+    </Form>
+    </Formik>
 
-      </>
-
+      
     )
 
 
