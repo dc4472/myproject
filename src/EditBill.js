@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const EditBill = () => {
@@ -15,6 +15,7 @@ const EditBill = () => {
 
     const billData = JSON.parse(localStorage.getItem(`bill-${billId}`))
 
+    
     useState(() => {
 
         setName(billData.name)
@@ -25,6 +26,22 @@ const EditBill = () => {
         setImage(billData.image)
 
     },[])
+    
+
+    /*
+    useEffect(() => {
+      const billData = JSON.parse(localStorage.getItem(`bill-${billId}`));
+  
+      if (billData) {
+        setName(billData.name);
+        setAddress(billData.address);
+        setDos(billData.dos);
+        setHospital(billData.hospital);
+        setAmount(billData.amount);
+        setImage(billData.image);
+      }
+    }, [billId]);
+    */
 
     const handleSubmit = (e) =>{
 
@@ -44,7 +61,13 @@ const EditBill = () => {
 
 
         localStorage.setItem(`bill-${billId}`, JSON.stringify(UpdatedBill))
-        navigate('/confirmation')
+        navigate(`/confirmation/${billId}`)
+    }
+
+    const handleDelete = () => {
+      localStorage.removeItem(`bill-${billId}`);
+      // Navigate to a different page or perform other actions as needed
+      navigate('/')
     }
 
     return (
@@ -78,6 +101,8 @@ const EditBill = () => {
           </label>
           <br />
           <button type="submit">Save Changes</button>
+          <br />
+          <button type="button" onClick={handleDelete}>Delete Bill</button>
         </form>
       </>
 
