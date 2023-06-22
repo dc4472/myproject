@@ -2,7 +2,9 @@ import React, {  useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-
+import { db } from './firebase-config';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth'
 
 const BillForm = props =>{
 
@@ -38,7 +40,7 @@ const BillForm = props =>{
 
 
 
-    const handleSubmit = (values, { resetForm }) => {
+    const handleSubmit = async (values, { resetForm }) => {
       // Generate a unique identifier for the bill (e.g., timestamp)
       const billId = Date.now();
   
@@ -52,6 +54,17 @@ const BillForm = props =>{
         amount: values.amount,
         image: values.image,
       };
+
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        // User not logged in, handle accordingly
+        console.log('User not logged in');
+        return;
+      }
+      const userId = user.uid;
+
+      // Store the bill data under the nested 'bills' collection of the user
+      await db.collection('users').doc(userId).collection('bills').doc(billId.toString()).set(billData);
   
       // Save the bill data to localStorage
       localStorage.setItem(`bill-${billId}`, JSON.stringify(billData));
