@@ -2,43 +2,65 @@ import React, { useState , useEffect } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate, useParams } from 'react-router-dom'
+import firebase from './firebasecon'
 
 const EditBill = () => {
 
     const { billId } = useParams()
-    const [name, setName] = useState('')
-    const [address, setAddress] = useState('')
-    const [dos, setDos] = useState('')
-    const [hospital, setHospital] = useState('')
-    const [amount, setAmount] = useState('')
-    const [image, setImage] = useState(null);
-
     const navigate = useNavigate()
+    const [billData, setBillData] = useState(null);
 
-    const billData = JSON.parse(localStorage.getItem(`bill-${billId}`))
+   
+
+    useEffect(() => {
+      const fetchBillData = async () => {
+        try {
+          // Get the currently authenticated user
+          const user = firebase.auth().currentUser;
+  
+          if (user) {
+            // Get a reference to the user's bill document
+            const billDocRef = firebase
+              .firestore()
+              .collection('users')
+              .doc(user.uid)
+              .collection('bills')
+              .doc(billId.toString());
+  
+            // Fetch the bill document data
+            const billSnapshot = await billDocRef.get();
+  
+            if (billSnapshot.exists) {
+              // Set the bill data state with the retrieved data
+              const billData=billSnapshot.data()
+              setBillData(billData);
+
+            } else {
+              // Document doesn't exist
+              console.log('Bill document not found');
+            }
+          }
+        } catch (error) {
+          // Handle the error
+          console.error(error);
+        }
+      };
+  
+      fetchBillData();
+    }, [billId]);
 
     const initialValues = {
 
-      name: billData.name,
-      address: billData.address,
-      dos: billData.dos,
-      hospital: billData.hospital,
-      amount: billData.amount,
+      
+      name: billData?.name|| '',
+      address: billData?.address || '',
+      dos: billData?.dos || '',
+      hospital: billData?.hospital || '',
+      amount: billData?.amount || '',
       image: null,
+      
 
     }
-
-    
-    useState(() => {
-
-        setName(billData.name)
-        setAddress(billData.address)
-        setDos(billData.dos)
-        setHospital(billData.hospital)
-        setAmount(billData.amount)
-        setImage(billData.image)
-
-    },[])
 
     const validationSchema = Yup.object().shape({
       name: Yup.string().required('Name is required'),
@@ -51,108 +73,88 @@ const EditBill = () => {
     })
     
 
-    /*
-    useEffect(() => {
-      const billData = JSON.parse(localStorage.getItem(`bill-${billId}`));
-  
-      if (billData) {
-        setName(billData.name);
-        setAddress(billData.address);
-        setDos(billData.dos);
-        setHospital(billData.hospital);
-        setAmount(billData.amount);
-        setImage(billData.image);
-      }
-    }, [billId]);
-   
+    const handleSubmit = async (values) => {
 
-    const handleSubmit = (e) =>{
-
-        e.preventDefault()
-
-        const UpdatedBill ={
-
-            id: billId,
-            name: name,
-            address: address,
-            dos: dos,
-            hospital: hospital,
-            amount: amount,
-            image: image,
-
+      try {
+        // Get the currently authenticated user
+        const user = firebase.auth().currentUser;
+    
+        if (user) {
+          // Get a reference to the user's bill document
+          const billDocRef = firebase
+            .firestore()
+            .collection('users')
+            .doc(user.uid)
+            .collection('bills')
+            .doc(billId.toString());
+    
+          // Update the bill document with the form values
+          await billDocRef.update({
+            name: values.name,
+            address: values.address,
+            dos: values.dos,
+            hospital: values.hospital,
+            amount: values.amount,
+            image: values.image
+            // Update other fields as needed
+          });
+          // Reset the form inputs
+          // resetForm();
+          navigate(`/confirmation/${billId}`);
         }
-
-
-        localStorage.setItem(`bill-${billId}`, JSON.stringify(UpdatedBill))
-        navigate(`/confirmation/${billId}`)
+      } catch (error) {
+        // Handle the error
+        console.error(error);
+      }
     }
 
-     */
 
-    const handleSubmit = (values, { resetForm }) => {
-
-      /*
-      // Generate a unique identifier for the bill (e.g., timestamp)
-      const billId = Date.now();
+    const handleDelete = async () => {
+      try {
+        // Get the currently authenticated user
+        const user = firebase.auth().currentUser;
   
-      // Create an object with the form data
-      const billData = {
-        id: billId,
-        name: values.name,
-        address: values.address,
-        dos: values.dos,
-        hospital: values.hospital,
-        amount: values.amount,
-        image: values.image,
-      };
+        if (user) {
+          // Get a reference to the user's bill document
+          const billDocRef = firebase
+            .firestore()
+            .collection('users')
+            .doc(user.uid)
+            .collection('bills')
+            .doc(billId.toString());
   
-      // Save the bill data to localStorage
-      localStorage.setItem(`bill-${billId}`, JSON.stringify(billData));
+          // Delete the bill document
+          await billDocRef.delete();
   
-      // Reset the form inputs
-      resetForm();
-
-      navigate(`/confirmation/${billData.id}`);
-      */
-
-      const billData = JSON.parse(localStorage.getItem(`bill-${billId}`));
-
-      if (billData) {
-        // Update the existing bill data with the form values
-        const updatedBillData = {
-          ...billData,
-          name: values.name,
-          address: values.address,
-          dos: values.dos,
-          hospital: values.hospital,
-          amount: values.amount,
-          image: values.image,
-        };
-    
-        // Save the updated bill data to localStorage
-        localStorage.setItem(`bill-${billId}`, JSON.stringify(updatedBillData));
-    
-        // Reset the form inputs
-        resetForm();
-    
-        navigate(`/confirmation/${billId}`);
+          navigate('/home');
+        }
+      } catch (error) {
+        // Handle the error
+        console.error(error);
       }
 
-
-  
+    
     }
 
-
-    const handleDelete = () => {
-      localStorage.removeItem(`bill-${billId}`);
-      // Navigate to a different page or perform other actions as needed
-      navigate('/')
+    if (!billData) {
+      return <div>Loading...</div>;
     }
 
     return (
 
       <Formik
-      initialValues={initialValues}
+      initialValues={{
+
+      
+        name: billData?.name|| '',
+        address: billData?.address || '',
+        dos: billData?.dos || '',
+        hospital: billData?.hospital || '',
+        amount: billData?.amount || '',
+        image: null,
+        
+  
+      }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
    >
