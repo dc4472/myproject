@@ -58,7 +58,6 @@ const Confirmation = () =>{
       <p>Hospital: {billData.hospital}</p>
       <p>Date of Service: {billData.dos}</p>
       <p>Amount: {billData.amount}</p>
-      {/* Additional fields can be displayed as needed */}
       <Link to="/home">Go to Homepage</Link>
       < br />
       <br />
