@@ -6,6 +6,7 @@ import firebase from './firebasecon';
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null)
   const navigate=useNavigate()
 
   const handleSignup = () => {
@@ -24,18 +25,19 @@ const Signup = () => {
         })
         .then(() => {
           console.log('User added to Firestore:', userId);
-          
           // Perform additional actions after signup and data save, such as redirecting to a different page
           navigate('/')
         })
         .catch((error) => {
           console.error('Error adding user to Firestore:', error);
           // Handle Firestore data save error
+          setError(error.message)
         });
       })
       .catch((error) => {
         console.error('Error signing up:', error);
         // Handle signup error, such as displaying an error message to the user
+        setError(error.message)
       });
   };
 
@@ -86,6 +88,7 @@ const Signup = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleSignup}>Sign up</button>
+      {error && <p>{error}</p>}
       <br />
       <br />
       <p>

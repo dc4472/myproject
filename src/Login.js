@@ -5,6 +5,7 @@ import firebase from './firebasecon'; // Assuming the Firebase configuration is 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null)
   const navigate =useNavigate()
 
   const handleLogin = () => {
@@ -21,6 +22,7 @@ const Login = () => {
       .catch((error) => {
         console.error('Error logging in:', error);
         // Handle login error, such as displaying an error message to the user
+         setError(error.message)
       });
   };
 
@@ -40,6 +42,7 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleLogin}>Log in</button>
+      {error && <p>{error}</p>}
       <br />
       <br />
       <p>
