@@ -15,6 +15,36 @@ const Signup = () => {
         const user = userCredential.user;
         const userId = user.uid;
 
+        // Create a nested collection for the user
+        firebase.firestore().collection('users').doc(userId).set({
+          email: email,
+          bills: [] // Initialize an empty array for bills
+        })
+        .then(() => {
+          console.log('User added to Firestore:', userId);
+          // Perform additional actions after signup and data save, such as redirecting to a different page
+        })
+        .catch((error) => {
+          console.error('Error adding user to Firestore:', error);
+          // Handle Firestore data save error
+        });
+      })
+      .catch((error) => {
+        console.error('Error signing up:', error);
+        // Handle signup error, such as displaying an error message to the user
+      });
+  };
+
+  /*
+  const handleSignup = () => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // User signed up successfully
+        const user = userCredential.user;
+        const userId = user.uid;
+
         // Add user to Firestore "users" collection
         firebase.firestore().collection('users').doc(userId).set({
           email: email,
@@ -34,6 +64,7 @@ const Signup = () => {
         // Handle signup error, such as displaying an error message to the user
       });
   };
+  */
 
   return (
     <div>
