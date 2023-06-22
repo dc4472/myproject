@@ -1,27 +1,55 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import firebase from './firebasecon'
 import './Home.css'
 
 const Home = props => {
 
+  const [bills, setBills] = useState([]);
       // Retrieve the bill data from localStorage
   const navigate = useNavigate()
 
-  const getBillsFromLocalStorage = () => {
-    const bills = [];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Get the currently authenticated user
+        const user = firebase.auth().currentUser;
 
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith('bill-')) {
-        const billData = JSON.parse(localStorage.getItem(key));
-        bills.push(billData);
+        if (user) {
+          // Get a reference to the user's bills collection
+          const billsCollection = firebase.firestore().collection('users').doc(user.uid).collection('bills');
+
+          // Fetch the bills documents from the collection
+          const snapshot = await billsCollection.get();
+
+          // Map the snapshot documents to an array of bill objects
+          const billsData = snapshot.docs.map((doc) => doc.data());
+
+          // Set the bills state with the retrieved data
+          setBills(billsData);
+        }
+      } catch (error) {
+        // Handle the error
+        console.error(error);
       }
-    }
+    };
 
-    return bills;
+    fetchData();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await firebase.auth().signOut();
+      console.log('User logged out')
+      navigate('/')
+      // Additional actions after successful logout
+    } catch (error) {
+      // Handle logout error
+      console.error('Error logging out:', error);
+    }
   };
 
-  const bills = getBillsFromLocalStorage();
+
 
   // <h2>Bill ID: {bill.id}</h2> This is just for later in case I still need it
   // <p>Patient Name: {bill.name}</p>
@@ -43,6 +71,9 @@ const Home = props => {
         ))}
       </div>
         <button onClick={() => navigate('/form')}>Add Bill</button>
+        <br />
+        <br />
+        <button onClick={handleLogout}>Logout</button>
     </div>
   );
 

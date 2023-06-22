@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
 import firebase from './firebasecon'; // Assuming the Firebase configuration is in a file named firebase.js
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate =useNavigate()
 
   const handleLogin = () => {
     firebase
@@ -14,6 +16,7 @@ const Login = () => {
         const user = userCredential.user;
         console.log('User logged in:', user.uid);
         // Perform additional actions after login, such as redirecting to a different page
+        navigate('/home')
       })
       .catch((error) => {
         console.error('Error logging in:', error);
@@ -37,6 +40,12 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleLogin}>Log in</button>
+      <br />
+      <br />
+      <p>
+          Dont have an account?
+          <Link className="loginText" to="/signup"> Sign up</Link>
+      </p>
     </div>
   );
 };

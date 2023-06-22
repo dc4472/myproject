@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import firebase from './firebasecon'
 
-const BillForm = props =>{
+const BillForm = () =>{
 
     const [name, setName] = useState('')
     const [address, setAddress] = useState('')
@@ -38,28 +38,49 @@ const BillForm = props =>{
 
 
 
-    const handleSubmit = (values, { resetForm }) => {
-      // Generate a unique identifier for the bill (e.g., timestamp)
-      const billId = Date.now();
-  
-      // Create an object with the form data
-      const billData = {
-        id: billId,
-        name: values.name,
-        address: values.address,
-        dos: values.dos,
-        hospital: values.hospital,
-        amount: values.amount,
-        image: values.image,
-      };
-  
-      // Save the bill data to localStorage
-      localStorage.setItem(`bill-${billId}`, JSON.stringify(billData));
-  
-      // Reset the form inputs
-      resetForm();
+    const handleSubmit = async (values, { resetForm }) => {
 
-      navigate(`/confirmation/${billData.id}`);
+      try {
+        // Generate a unique identifier for the bill (e.g., timestamp)
+        const billId = Date.now();
+    
+        // Create an object with the form data
+        const billData = {
+          id: billId,
+          name: values.name,
+          address: values.address,
+          dos: values.dos,
+          hospital: values.hospital,
+          amount: values.amount,
+          image: values.image,
+        };
+    
+        // Get the currently authenticated user
+        const user = firebase.auth().currentUser;
+    
+        if (user) {
+          // Get a reference to the user's bills collection
+          const billsCollection = firebase.firestore().collection('users').doc(user.uid).collection('bills');
+    
+          // Save the bill document to the bills collection
+          await billsCollection.doc(billId.toString()).set(billData);
+    
+          // Reset the form inputs
+          resetForm();
+    
+          navigate(`/confirmation/${billId}`);
+        } else {
+          // User is not logged in, handle the error
+          setError('User not authenticated');
+          console.log(error)
+        }
+      } catch (error) {
+        // Handle the error
+        setError(error.message);
+      }
+
+      
+
   
     }
 

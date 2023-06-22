@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
 import firebase from './firebasecon';
 // import firebase from './firebase'; // Assuming the Firebase configuration is in a file named firebase.js
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate=useNavigate()
 
   const handleSignup = () => {
     firebase
@@ -22,7 +24,9 @@ const Signup = () => {
         })
         .then(() => {
           console.log('User added to Firestore:', userId);
+          
           // Perform additional actions after signup and data save, such as redirecting to a different page
+          navigate('/')
         })
         .catch((error) => {
           console.error('Error adding user to Firestore:', error);
@@ -82,6 +86,12 @@ const Signup = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleSignup}>Sign up</button>
+      <br />
+      <br />
+      <p>
+          Already have an account?
+          <Link className="loginText" to="/login"> Log in</Link>
+      </p>
     </div>
   );
 };
