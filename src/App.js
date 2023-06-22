@@ -5,6 +5,8 @@ import BillForm from './BillForm'
 import Confirmation from './Confirmation'
 import Home from './Home'
 import EditBill from './EditBill'
+import Login from './Login'
+import Signup from './Signup'
 
 const App = props => (
   <div className="App">
@@ -14,8 +16,10 @@ const App = props => (
                     {/* a route for the home page */}
                     <Route path="/form" element={<BillForm />} />
                     <Route path="/confirmation/:billId" element={<Confirmation />} />
-                    <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
                     <Route path="/edit/:billId" element={<EditBill />} />
+                    <Route path="/" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
                 </Routes>
             </main>
         </Router>

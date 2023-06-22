@@ -2,6 +2,8 @@ import React, {  useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth'
 
 
 const BillForm = props =>{
@@ -38,28 +40,45 @@ const BillForm = props =>{
 
 
 
-    const handleSubmit = (values, { resetForm }) => {
+    const handleSubmit = async (values, { resetForm }) => {
       // Generate a unique identifier for the bill (e.g., timestamp)
-      const billId = Date.now();
-  
-      // Create an object with the form data
-      const billData = {
-        id: billId,
-        name: values.name,
-        address: values.address,
-        dos: values.dos,
-        hospital: values.hospital,
-        amount: values.amount,
-        image: values.image,
-      };
-  
-      // Save the bill data to localStorage
-      localStorage.setItem(`bill-${billId}`, JSON.stringify(billData));
-  
-      // Reset the form inputs
-      resetForm();
+      try{
 
-      navigate(`/confirmation/${billData.id}`);
+        const user = firebase.auth().currentUser;
+
+        if (!user) {
+          throw new Error('No user found');
+        }
+        const billId = Date.now();
+    
+        // Create an object with the form data
+        const billData = {
+          id: billId,
+          userId: user.uid,
+          name: values.name,
+          address: values.address,
+          dos: values.dos,
+          hospital: values.hospital,
+          amount: values.amount,
+          image: values.image,
+        };
+    
+        // Save the bill data to localStorage
+        localStorage.setItem(`bill-${billId}`, JSON.stringify(billData));
+    
+        // Reset the form inputs
+        resetForm();
+
+        navigate(`/confirmation/${billData.id}`);
+
+      } catch(error){
+
+          console.log('Error creating bill: ', error)
+          setError('Failed to create bill')
+
+
+      }
+
   
     }
 

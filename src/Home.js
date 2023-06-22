@@ -1,27 +1,36 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth'
+import 'firebase/compat/firestore'
 import './Home.css'
 
 const Home = props => {
 
       // Retrieve the bill data from localStorage
   const navigate = useNavigate()
+  const [userBills, setUserBills] = useState([]);
 
-  const getBillsFromLocalStorage = () => {
-    const bills = [];
 
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith('bill-')) {
-        const billData = JSON.parse(localStorage.getItem(key));
-        bills.push(billData);
-      }
-    }
+  useEffect(() => {
+    const userIdentifier = firebase.auth().currentUser.uid;
+    const billsCollection = firebase.firestore().collection('bills');
 
-    return bills;
-  };
+    const unsubscribe = billsCollection
+      .where('userId', '==', userIdentifier)
+      .onSnapshot((querySnapshot) => {
+        const bills = [];
+        querySnapshot.forEach((doc) => {
+          const billData = doc.data();
+          bills.push(billData);
+        });
+        setUserBills(bills);
+      });
 
-  const bills = getBillsFromLocalStorage();
+    return () => unsubscribe();
+  }, []);
+
+ 
 
   // <h2>Bill ID: {bill.id}</h2> This is just for later in case I still need it
   // <p>Patient Name: {bill.name}</p>
@@ -29,7 +38,7 @@ const Home = props => {
     <div className="container">
       <h1>Uploaded Bills</h1>
       <div className="bill-list">
-        {bills.map((bill) => (
+        {userBills.map((bill) => (
           <div className='bill-item' key={bill.id} >
             <div className="bill-item-content">
               {/* Display bill information */}
