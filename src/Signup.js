@@ -65,7 +65,7 @@ const Signup = () => {
       <br />
       <p>
           Already have an account?
-          <Link className="loginText" to="/login"> Log in</Link>
+          <Link className="loginText" to="/"> Log in</Link>
       </p>
     </div>
   );
