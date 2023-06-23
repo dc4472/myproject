@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate, useParams } from 'react-router-dom'
 import firebase from './firebasecon'
+import './BillForm.css'
 
 const EditBill = () => {
 
@@ -49,18 +50,6 @@ const EditBill = () => {
       fetchBillData();
     }, [billId]);
 
-    const initialValues = {
-
-      
-      name: billData?.name|| '',
-      address: billData?.address || '',
-      dos: billData?.dos || '',
-      hospital: billData?.hospital || '',
-      amount: billData?.amount || '',
-      image: null,
-      
-
-    }
 
     const validationSchema = Yup.object().shape({
       name: Yup.string().required('Name is required'),
@@ -70,6 +59,16 @@ const EditBill = () => {
       amount: Yup.number()
         .typeError('Amount must be a number')
         .required('Amount is required'),
+      image:  Yup.mixed().test('image', 'Image is required', function (value) {
+        if (!value) {
+          return this.createError({
+            path: 'image',
+            message: 'Please upload an image',
+          });
+        }
+        return true;
+      })
+    
     })
     
 
@@ -96,10 +95,7 @@ const EditBill = () => {
             hospital: values.hospital,
             amount: values.amount,
             image: values.image
-            // Update other fields as needed
           });
-          // Reset the form inputs
-          // resetForm();
           navigate(`/confirmation/${billId}`);
         }
       } catch (error) {
@@ -157,66 +153,70 @@ const EditBill = () => {
       }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
-   >
+    >
 
-<Form>
-<label>
-  Patient Name:
-  <Field type="text" name="name" />
-  <ErrorMessage name="name" component="div" className="error" />
-</label>
-<br />
-<label>
-  Patient Address:
-  <Field type="text" name="address" />
-  <ErrorMessage name="address" component="div" className="error" />
-</label>
-<br />
-<label>
-  Hospital Name:
-  <Field type="text" name="hospital" />
-  <ErrorMessage name="hospital" component="div" className="error" />
-</label>
-<br />
-<label>
-  Date of Service:
-  <Field type="date" name="dos" />
-  <ErrorMessage name="dos" component="div" className="error" />
-</label>
-<br />
-<label>
-  Bill Amount:
-  <Field type="number" name="amount" />
-  <ErrorMessage name="amount" component="div" className="error" />
-</label>
-<br />
-<label>
-  Bill Image:
-  <Field type="file" name="image" />
-  <ErrorMessage name="image" component="div" className="error" />
-</label>
-<br />
+      <Form className='centered-form'>
+      <h1>Bill</h1>
+      <label className='form-field'>
+        Patient Name:
+        <Field type="text" name="name" className='input-box'/>
+        <ErrorMessage name="name" component="div" className="error" />
+      </label>
+      <br />
+      <label className='form-field'>
+        Patient Address:
+        <Field type="text" name="address" className='input-box'/>
+        <ErrorMessage name="address" component="div" className="error" />
+      </label>
+      <br />
+      <label className='form-field'>
+        Hospital Name:
+        <Field type="text" name="hospital" className='input-box'/>
+        <ErrorMessage name="hospital" component="div" className="error" />
+      </label>
+      <br />
+      <label className='form-field'>
+        Date of Service:
+        <Field type="date" name="dos" className='input-box'/>
+        <ErrorMessage name="dos" component="div" className="error" />
+      </label>
+      <br />
+      <label className='form-field'>
+        Bill Amount:
+        <Field type="number" name="amount" className='input-box'/>
+        <ErrorMessage name="amount" component="div" className="error" />
+      </label>
+      <br />
+      <label className='form-field'>
+          Bill Image:
+          <Field type="file" name="image" accept="image/*" className='input-box'/>
+          <ErrorMessage name="image" component="div" className="error" />
+      </label>
+      <br />
+        {billData.image && (
+          <div>
+            <label>Previously Given Image:</label>
+            <br />
+            <img
+              src={billData.image}
+              alt="Previously Given Bill"
+              className="previous-image"
+            />
+          </div>
+        )}
+      <br />
 
-<br />
-<button type="submit">Submit</button>
-<br />
-<button type="button" onClick={handleDelete}>Delete Bill</button>
-</Form>
-</Formik>
+      <br />
+      <button type="submit">Submit</button>
+      <br />
 
-
-       
-
-
+      <br />
+      <button type="button" onClick={handleDelete}>Delete Bill</button>
+      <br />
+      </Form>
+    </Formik>
 
     )
-
-
-
-
-
-
-
 
 }
 

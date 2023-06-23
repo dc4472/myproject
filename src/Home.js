@@ -6,7 +6,6 @@ import './Home.css'
 const Home = props => {
 
   const [bills, setBills] = useState([]);
-      // Retrieve the bill data from localStorage
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -50,9 +49,6 @@ const Home = props => {
   };
 
 
-
-  // <h2>Bill ID: {bill.id}</h2> This is just for later in case I still need it
-  // <p>Patient Name: {bill.name}</p>
   return (
     <div className="container">
       <h1>Uploaded Bills</h1>
@@ -60,7 +56,6 @@ const Home = props => {
         {bills.map((bill) => (
           <div className='bill-item' key={bill.id} >
             <div className="bill-item-content">
-              {/* Display bill information */}
               <p className="patient-name" onClick={() => navigate(`/edit/${bill.id}`)}>Patient Name: {bill.name}</p>
               <p>Patient Address: {bill.address}</p>
               <p>Date of Service: {bill.dos}</p>
@@ -70,10 +65,10 @@ const Home = props => {
           </div>
         ))}
       </div>
-        <button onClick={() => navigate('/form')}>Add Bill</button>
+        <button onClick={() => navigate('/form')} className='button'>Add Bill</button>
         <br />
         <br />
-        <button onClick={handleLogout}>Logout</button>
+        <button onClick={handleLogout} className='button'>Logout</button>
     </div>
   );
 

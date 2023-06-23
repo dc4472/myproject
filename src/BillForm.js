@@ -3,18 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import firebase from './firebasecon'
+import './BillForm.css'
 
 const BillForm = () =>{
 
-    const [name, setName] = useState('')
-    const [address, setAddress] = useState('')
-    const [dos, setDos] = useState('')
-    const [hospital, setHospital] = useState('')
-    const [amount, setAmount] = useState('')
-    const [image, setImage] = useState(null);
     const [error, setError] = useState(undefined)
   
-
     const navigate = useNavigate()
 
     const initialValues = {
@@ -34,6 +28,16 @@ const BillForm = () =>{
       amount: Yup.number()
         .typeError('Amount must be a number')
         .required('Amount is required'),
+      image:  Yup.mixed().test('image', 'Image is required', function (value) {
+        if (!value) {
+          return this.createError({
+            path: 'image',
+            message: 'Please upload an image',
+          });
+        }
+        return true;
+      })
+
     });
 
 
@@ -86,68 +90,59 @@ const BillForm = () =>{
 
 
 
-    /*
-    <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-         ></Formik>
-
-    */
-    
 
     
     return (
 
       <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-         >
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        <Form className='centered-form'>
+          <h1>New Bill</h1>
+          <label className='form-field'>
+            Patient Name:
+            <Field type="text" name="name" className='input-box'/>
+            <ErrorMessage name="name" component="div" className="error" />
+          </label>
+          <br />
+          <label className='form-field'>
+            Patient Address:
+            <Field type="text" name="address" className='input-box'/>
+            <ErrorMessage name="address" component="div" className="error" />
+          </label>
+          <br />
+          <label className='form-field'>
+            Hospital Name:
+            <Field type="text" name="hospital" className='input-box'/>
+            <ErrorMessage name="hospital" component="div" className="error" />
+          </label>
+          <br />
+          <label className='form-field'>
+            Date of Service:
+            <Field type="date" name="dos" className='input-box'/>
+            <ErrorMessage name="dos" component="div" className="error" />
+          </label>
+          <br />
+          <label className='form-field'>
+            Bill Amount:
+            <Field type="number" name="amount" className='input-box'/>
+            <ErrorMessage name="amount" component="div" className="error" />
+          </label>
+          <br />
+          <label className='form-field'>
+            Bill Image:
+            <Field type="file" name="image" accept="image/*" className='input-box'/>
+            <ErrorMessage name="image" component="div" className="error" />
+          </label>
+          <br />
 
-      <Form>
-      <label>
-        Patient Name:
-        <Field type="text" name="name" />
-        <ErrorMessage name="name" component="div" className="error" />
-      </label>
-      <br />
-      <label>
-        Patient Address:
-        <Field type="text" name="address" />
-        <ErrorMessage name="address" component="div" className="error" />
-      </label>
-      <br />
-      <label>
-        Hospital Name:
-        <Field type="text" name="hospital" />
-        <ErrorMessage name="hospital" component="div" className="error" />
-      </label>
-      <br />
-      <label>
-        Date of Service:
-        <Field type="date" name="dos" />
-        <ErrorMessage name="dos" component="div" className="error" />
-      </label>
-      <br />
-      <label>
-        Bill Amount:
-        <Field type="number" name="amount" />
-        <ErrorMessage name="amount" component="div" className="error" />
-      </label>
-      <br />
-      <label>
-        Bill Image:
-        <Field type="file" name="image" />
-        <ErrorMessage name="image" component="div" className="error" />
-      </label>
-      <br />
-
-      <br />
-      <button type="submit">Submit</button>
-      <br />
-    </Form>
-    </Formik>
+          <br />
+          <button type="submit">Submit</button>
+          <br />
+        </Form>
+      </Formik>
 
       
     )
