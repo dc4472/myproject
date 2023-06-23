@@ -1,12 +1,14 @@
 import React, { useState , useEffect } from "react";
 // import { useNavigate } from 'react-router-dom'
-import { useParams , Link } from 'react-router-dom'
+import { useParams , useNavigate } from 'react-router-dom'
 import firebase from './firebasecon'
+import './BillForm.css'
 
 const Confirmation = () =>{
 
   const { billId } = useParams()
   const [billData, setBillData] = useState(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchBillData = async () => {
@@ -42,6 +44,18 @@ const Confirmation = () =>{
 
     fetchBillData();
   }, [billId]);
+
+  const handleHomeNav = () => {
+
+    navigate('/home')
+
+  }
+
+  const handleEditNav = () => {
+
+    navigate(`/edit/${billData.id}`)
+
+  }
  
 
   
@@ -51,17 +65,17 @@ const Confirmation = () =>{
   }
 
   return (
-    <div>
+    <div className="centered-form">
       <h2>Summary</h2>
       <p>Name: {billData.name}</p>
       <p>Address: {billData.address}</p>
       <p>Hospital: {billData.hospital}</p>
       <p>Date of Service: {billData.dos}</p>
       <p>Amount: {billData.amount}</p>
-      <Link to="/home">Go to Homepage</Link>
+      <button onClick={handleHomeNav}>Go to Homepage</button>
       < br />
       <br />
-      <Link to={`/edit/${billData.id}`}>Edit Everything</Link>
+      <button onClick={handleEditNav}>Edit Everything</button>
     </div>
   );
 

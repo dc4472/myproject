@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import firebase from './firebasecon'
+import './BillForm.css'
 
 const BillForm = () =>{
 
@@ -88,7 +89,8 @@ const BillForm = () =>{
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        <Form>
+        <Form className='centered-form'>
+          <h1>New Bill</h1>
           <label>
             Patient Name:
             <Field type="text" name="name" />

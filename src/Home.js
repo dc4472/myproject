@@ -65,10 +65,10 @@ const Home = props => {
           </div>
         ))}
       </div>
-        <button onClick={() => navigate('/form')}>Add Bill</button>
+        <button onClick={() => navigate('/form')} className='button'>Add Bill</button>
         <br />
         <br />
-        <button onClick={handleLogout}>Logout</button>
+        <button onClick={handleLogout} className='button'>Logout</button>
     </div>
   );
 

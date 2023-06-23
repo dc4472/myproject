@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate, useParams } from 'react-router-dom'
 import firebase from './firebasecon'
+import './BillForm.css'
 
 const EditBill = () => {
 
@@ -144,7 +145,8 @@ const EditBill = () => {
       onSubmit={handleSubmit}
     >
 
-      <Form>
+      <Form className='centered-form'>
+      <h1>Bill</h1>
       <label>
         Patient Name:
         <Field type="text" name="name" />
@@ -185,7 +187,10 @@ const EditBill = () => {
       <br />
       <button type="submit">Submit</button>
       <br />
+
+      <br />
       <button type="button" onClick={handleDelete}>Delete Bill</button>
+      <br />
       </Form>
     </Formik>
 
