@@ -101,39 +101,39 @@ const BillForm = () =>{
       >
         <Form className='centered-form'>
           <h1>New Bill</h1>
-          <label>
+          <label className='form-field'>
             Patient Name:
-            <Field type="text" name="name" />
+            <Field type="text" name="name" className='input-box'/>
             <ErrorMessage name="name" component="div" className="error" />
           </label>
           <br />
-          <label>
+          <label className='form-field'>
             Patient Address:
-            <Field type="text" name="address" />
+            <Field type="text" name="address" className='input-box'/>
             <ErrorMessage name="address" component="div" className="error" />
           </label>
           <br />
-          <label>
+          <label className='form-field'>
             Hospital Name:
-            <Field type="text" name="hospital" />
+            <Field type="text" name="hospital" className='input-box'/>
             <ErrorMessage name="hospital" component="div" className="error" />
           </label>
           <br />
-          <label>
+          <label className='form-field'>
             Date of Service:
-            <Field type="date" name="dos" />
+            <Field type="date" name="dos" className='input-box'/>
             <ErrorMessage name="dos" component="div" className="error" />
           </label>
           <br />
-          <label>
+          <label className='form-field'>
             Bill Amount:
-            <Field type="number" name="amount" />
+            <Field type="number" name="amount" className='input-box'/>
             <ErrorMessage name="amount" component="div" className="error" />
           </label>
           <br />
-          <label>
+          <label className='form-field'>
             Bill Image:
-            <Field type="file" name="image" accept="image/*"/>
+            <Field type="file" name="image" accept="image/*" className='input-box'/>
             <ErrorMessage name="image" component="div" className="error" />
           </label>
           <br />
