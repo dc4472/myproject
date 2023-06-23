@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import firebase from './firebasecon';
+import './BillForm.css'
 
 
 const Signup = () => {
@@ -44,8 +45,8 @@ const Signup = () => {
 
 
   return (
-    <div>
-      <h2>Signup</h2>
+    <div className='centered-form'>
+      <h1>Signup</h1>
       <input
         type="email"
         placeholder="Email"
