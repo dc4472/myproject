@@ -72,6 +72,12 @@ const Confirmation = () =>{
       <p>Hospital: {billData.hospital}</p>
       <p>Date of Service: {billData.dos}</p>
       <p>Amount: {billData.amount}</p>
+      {billData.image && (
+        <div>
+          <p>Image: {billData.image.name}</p>
+          <img src={billData.image.url} alt="Bill" />
+        </div>
+      )}
       <button onClick={handleHomeNav}>Go to Homepage</button>
       < br />
       <br />

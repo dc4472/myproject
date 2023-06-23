@@ -28,6 +28,16 @@ const BillForm = () =>{
       amount: Yup.number()
         .typeError('Amount must be a number')
         .required('Amount is required'),
+      image:  Yup.mixed().test('image', 'Image is required', function (value) {
+        if (!value) {
+          return this.createError({
+            path: 'image',
+            message: 'Please upload an image',
+          });
+        }
+        return true;
+      })
+
     });
 
 
@@ -123,7 +133,7 @@ const BillForm = () =>{
           <br />
           <label>
             Bill Image:
-            <Field type="file" name="image" />
+            <Field type="file" name="image" accept="image/*"/>
             <ErrorMessage name="image" component="div" className="error" />
           </label>
           <br />

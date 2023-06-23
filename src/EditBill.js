@@ -59,6 +59,16 @@ const EditBill = () => {
       amount: Yup.number()
         .typeError('Amount must be a number')
         .required('Amount is required'),
+      image:  Yup.mixed().test('image', 'Image is required', function (value) {
+        if (!value) {
+          return this.createError({
+            path: 'image',
+            message: 'Please upload an image',
+          });
+        }
+        return true;
+      })
+    
     })
     
 
@@ -178,10 +188,22 @@ const EditBill = () => {
       </label>
       <br />
       <label>
-        Bill Image:
-        <Field type="file" name="image" />
-        <ErrorMessage name="image" component="div" className="error" />
+          Bill Image:
+          <Field type="file" name="image" accept="image/*"/>
+          <ErrorMessage name="image" component="div" className="error" />
       </label>
+      <br />
+        {billData.image && (
+          <div>
+            <label>Previously Given Image:</label>
+            <br />
+            <img
+              src={billData.image}
+              alt="Previously Given Bill"
+              className="previous-image"
+            />
+          </div>
+        )}
       <br />
 
       <br />
